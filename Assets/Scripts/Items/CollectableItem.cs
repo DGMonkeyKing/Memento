@@ -1,18 +1,16 @@
 using System.Collections;
 using System.Collections.Generic;
+using DGMKCollections.Memento.Components;
 using UnityEngine;
 
-public class CollectableItem : MonoBehaviour
+namespace DGMKCollections.Memento.Items.Data
 {
-    // Start is called before the first frame update
-    void Start()
+    [CreateAssetMenu(fileName = "Collectable Item", menuName = "Memento/New Collectable Item", order = 0)]
+    public class CollectableItem : ItemData
     {
-        
-    }
-
-    // Update is called once per frame
-    void Update()
-    {
-        
+        public override void MakeAction(Item item, Collector collector)
+        {
+            item.gameObject.SetActive(false);
+        }
     }
 }

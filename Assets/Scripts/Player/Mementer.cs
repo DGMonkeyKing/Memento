@@ -1,12 +1,9 @@
-using System.Collections;
-using System.Collections.Generic;
-using DGMKCollections.Memento.Interfaces;
 using UnityEngine;
 using DGMKCollections.Memento.Components;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
-public class Mementer : MonoBehaviour, ICollector
+public class Mementer : MonoBehaviour
 {
     private float _horizontalInput = 0f;
     private bool _jumpInput = false;

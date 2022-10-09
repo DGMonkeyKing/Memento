@@ -1,18 +1,21 @@
 using System.Collections;
 using System.Collections.Generic;
+using DGMKCollections.Memento.Components;
+using DGMKCollections.Memento.Items.Data;
 using UnityEngine;
 
-public class Item : MonoBehaviour
+namespace DGMKCollections.Memento.Items
 {
-    // Start is called before the first frame update
-    void Start()
+    [RequireComponent(typeof(Collider2D))]
+    public class Item : MonoBehaviour
     {
-        
-    }
+        [SerializeField]
+        private ItemData _itemData;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
+        private void OnTriggerEnter2D(Collider2D other) 
+        {
+            Collector collector = other.gameObject.GetComponent<Collector>();
+            _itemData.MakeAction(this, collector);
+        }
     }
 }
