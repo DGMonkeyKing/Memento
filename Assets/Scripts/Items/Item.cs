@@ -10,12 +10,15 @@ namespace DGMKCollections.Memento.Items
     public class Item : MonoBehaviour
     {
         [SerializeField]
-        private ItemData _itemData;
+        private ItemData[] _itemData;
 
         private void OnTriggerEnter2D(Collider2D other) 
         {
             Collector collector = other.gameObject.GetComponent<Collector>();
-            _itemData.MakeAction(this, collector);
+            foreach(ItemData i in _itemData)
+            {
+                i.MakeAction(this, collector);
+            }
         }
     }
 }
