@@ -1,45 +1,67 @@
 using UnityEngine;
-using TMPro;
 using System;
+using TMPro;
 
 namespace DGMKCollections.Timer
 {
-    [RequireComponent(typeof(TextMeshProUGUI))]
     public class Timer : MonoBehaviour
     {
-        private float _milliseconds = 0f;
+        private float _millisecondsCount = 0f;
+        public float MillisecondsCount => _millisecondsCount;
+        
+        [SerializeField]
+        private float _startingSeconds = 0f;
+        [SerializeField]
+        private float _endingSeconds = 0f;
+
+        private float _startingMilliseconds => _startingSeconds * 1000f;
+        private float _endingMilliseconds => _endingSeconds * 1000f;
+        
+        [SerializeField]
+        private bool _startTimerOnAwake = false;
 
         [SerializeField]
-        private bool _timerOn = false;
-
         private TextMeshProUGUI _tmp;
+
+        private bool _timerOn = false;
         private TimeSpan ts;
 
-        private void Awake() 
-        {   
-            _tmp = GetComponent<TextMeshProUGUI>();
+        void Awake() 
+        {
+            if(_startTimerOnAwake) StartTimer();    
         }
         
-        // Start is called before the first frame update
-        void StartTimer()
+        public void StartTimer()
         {
             _timerOn = true;
+            _millisecondsCount = _startingMilliseconds;
         }
+        public void PauseTimer() => _timerOn = false;
 
-        // Update is called once per frame
         void Update()
         {
-            if(_timerOn)
+            if(_timerOn) 
             {
-                _milliseconds += (Time.deltaTime * 1000);
-                ts = TimeSpan.FromMilliseconds(_milliseconds);
-                _tmp.text = ts.ToString(@"mm\:ss\.fff");
+                _millisecondsCount += (Time.deltaTime * 1000);
+                if(_endingMilliseconds > 0f && _millisecondsCount >= _endingMilliseconds)
+                {
+                    _millisecondsCount = _endingMilliseconds;
+                    PauseTimer();
+                }
+                
+                _tmp.text = ToStringFormatted(@"mm\:ss\.fff");
             }
         }
 
-        void ResetTimer()
+        public void ResetTimer()
         {
-            _milliseconds = 0f;
+            _millisecondsCount = 0f;
+        }
+
+        public string ToStringFormatted(string format) // @"mm\:ss\.fff"
+        {
+            ts = TimeSpan.FromMilliseconds(_millisecondsCount);
+            return ts.ToString(format);
         }
     }
 }
