@@ -26,7 +26,7 @@ namespace DGMKCollections.Timer
         private float _startingMilliseconds => _startingSeconds * 1000f;
         private float _endingMilliseconds => _endingSeconds * 1000f;
 
-        private TimeSpan ts;
+        private static TimeSpan ts;
         private bool _timerOn = false;
         private Coroutine _timerCoroutine = null; 
         
@@ -105,6 +105,12 @@ namespace DGMKCollections.Timer
         protected string ToStringFormatted(string format) // @"mm\:ss\.fff"
         {
             ts = TimeSpan.FromMilliseconds(_millisecondsCount);
+            return ts.ToString(format);
+        }
+
+        public static string MillisecondsToStringFormatted(float milliseconds, string format)
+        {
+            ts = TimeSpan.FromMilliseconds(milliseconds);
             return ts.ToString(format);
         }
     }

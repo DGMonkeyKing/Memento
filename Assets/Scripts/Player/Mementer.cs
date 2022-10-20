@@ -21,6 +21,8 @@ public class Mementer : MonoBehaviour
     private Horizontal2DMove _horizontalMoveComponent;
     private JumpComponent _jumpComponent;
     private Animator _animator;
+    private Rigidbody2D _rigidbody;
+    private float _originalGravityScale;
 
     private bool _allowInputs;
     private Vector3 _initialPosition = Vector3.zero;
@@ -33,6 +35,8 @@ public class Mementer : MonoBehaviour
         _horizontalMoveComponent = GetComponent<Horizontal2DMove>();
         _groundCheck = GetComponent<GroundChecker2D>();
         _jumpComponent = GetComponent<JumpComponent>();
+        _rigidbody = GetComponent<Rigidbody2D>();
+        _originalGravityScale = _rigidbody.gravityScale;
 
         _state = MementerState.PLAYING;
 
@@ -42,11 +46,14 @@ public class Mementer : MonoBehaviour
     public void EnableInputs()
     {
         _allowInputs = true;
+        _rigidbody.gravityScale = _originalGravityScale;
     }
 
     public void DisableInputs()
     {
         _allowInputs = false;
+        _rigidbody.gravityScale = 0f;
+        _rigidbody.velocity = Vector2.zero;
     }
 
     // Update is called once per frame

@@ -21,25 +21,16 @@ namespace DGMKCollections.Memento.UI
             }
         }
 
-        void OnEnable()
+        public void ChangeRanking(string name, float milliseconds)
         {
-
-        }
-
-        void OnDisable()
-        {
-            
+            _ranking.SetEntry(name, milliseconds);
+            int position = CheckPosition(milliseconds);
+            _uiRankingsEntries[position].ChangeInfo(_ranking.GetEntry(position));
         }
 
         public int CheckPosition(float milliseconds)
         {
             return _ranking.CheckPosition(milliseconds);
-        }
-
-        // Update is called once per frame
-        protected override void Update()
-        {
-            base.Update();
         }
     }
 }

@@ -2,6 +2,7 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 using TMPro;
+using DGMKCollections.Timer;
 
 public class UIRankingEntries : MonoBehaviour
 {
@@ -20,6 +21,9 @@ public class UIRankingEntries : MonoBehaviour
     public void ChangeInfo(Entry _entry)
     {
         _name.text = _entry.EntryName;
-        _score.text = _entry.EntryScore.ToString();
+        if(_entry.EntryScore == float.MaxValue)
+            _score.text = "99:99.999";
+        else
+            _score.text = Timer.MillisecondsToStringFormatted(_entry.EntryScore, @"mm\:ss\.fff");
     }
 }

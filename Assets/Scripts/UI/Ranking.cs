@@ -23,11 +23,13 @@ public class Ranking
         {
             Entry e = _entries[i];
 
-            if(e.CompareToScore(milliseconds) <= 0)
+            if(e.EntryScore < milliseconds)
             {
                 // Hemos encontrado posición
-                position = i+1;
+                return position;
             }
+
+            position = i;
         }
 
         return position;
@@ -36,6 +38,16 @@ public class Ranking
     public Entry GetEntry(int position)
     {
         return _entries[position];
+    }
+
+    public void SetEntry(string name, float milliseconds)
+    {
+        Entry e = new Entry();
+        e.EntryName = name;
+        e.EntryScore = milliseconds;
+
+        _entries[CheckPosition(milliseconds)].EntryName = name;
+        _entries[CheckPosition(milliseconds)].EntryScore = milliseconds;
     }
 }
 
@@ -47,7 +59,7 @@ public class Entry
     public Entry()
     {
         EntryName = "---";
-        EntryScore = 999999f;
+        EntryScore = float.MaxValue;
     }
 
     // -1 : Entry is Lower

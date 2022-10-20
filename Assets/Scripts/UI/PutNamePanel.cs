@@ -6,16 +6,21 @@ namespace DGMKCollections.Memento.UI
 {
     public class PutNamePanel : UIPanel
     {
-        // Start is called before the first frame update
-        void Start()
+        public delegate void NameAction(string _name);
+        public event NameAction NameInput;
+
+        [SerializeField]
+        private InputName _inputName;
+
+        void OnEnable()
         {
-            
+
         }
 
-        // Update is called once per frame
-        void Update()
+        void OnDisable()
         {
-            
+            NameInput(_inputName.RetrieveName());
+            _inputName.Reset();    
         }
     }
 }

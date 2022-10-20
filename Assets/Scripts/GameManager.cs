@@ -22,21 +22,21 @@ public class GameManager : Singleton<GameManager>
     [SerializeField]
     private PutNamePanel _canvasName;
 
-    
-    
 
     void OnEnable() 
     {
         _score.MaxScoreReached += GameOver;
         _canvasRanking.OnEnterPressed += StartGame;
         _canvasName.OnEnterPressed += ShowRanking;
+        _canvasName.NameInput += SaveName;
     }
 
     void OnDisable()
     {
         _score.MaxScoreReached -= GameOver;
         _canvasRanking.OnEnterPressed -= StartGame;
-        _canvasName.OnEnterPressed += SaveName;
+        _canvasName.OnEnterPressed -= ShowRanking;
+        _canvasName.NameInput -= SaveName;
     }
 
     private void ResetScene()
@@ -82,12 +82,9 @@ public class GameManager : Singleton<GameManager>
         yield return 0;
     }
 
-    public void SaveName()
+    public void SaveName(string name)
     {
-        //string inputName = _canvasName.InputName;
-        //_canvasRanking.Add
-
-        ShowRanking();
+        _canvasRanking.ChangeRanking(name, _timer.MillisecondsCount);
     }
 
     public void ShowRanking()
@@ -108,7 +105,7 @@ public class GameManager : Singleton<GameManager>
         //Paramos el juego y aviso al jugador
         _timer.PauseTimer();
         //Terminamos el juego
-        if(_canvasRanking.CheckPosition(_timer.MillisecondsCount) > 0)
+        if(_canvasRanking.CheckPosition(_timer.MillisecondsCount) >= 0)
         {
             ShowPutName();
         }
