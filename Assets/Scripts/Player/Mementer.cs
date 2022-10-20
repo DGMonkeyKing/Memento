@@ -1,10 +1,19 @@
 using UnityEngine;
 using DGMKCollections.Memento.Components;
+using System;
 
 [RequireComponent(typeof(Animator))]
 [RequireComponent(typeof(SpriteRenderer))]
 public class Mementer : MonoBehaviour
 {
+    public enum MementerState
+    {
+        PLAYING,
+        FINISHED
+    }
+
+    private MementerState _state;
+
     private float _horizontalInput = 0f;
     private bool _jumpInput = false;
 
@@ -12,6 +21,9 @@ public class Mementer : MonoBehaviour
     private Horizontal2DMove _horizontalMoveComponent;
     private JumpComponent _jumpComponent;
     private Animator _animator;
+
+    private bool _allowInputs;
+    private Vector3 _initialPosition = Vector3.zero;
 
 
     // Start is called before the first frame update
@@ -21,21 +33,57 @@ public class Mementer : MonoBehaviour
         _horizontalMoveComponent = GetComponent<Horizontal2DMove>();
         _groundCheck = GetComponent<GroundChecker2D>();
         _jumpComponent = GetComponent<JumpComponent>();
+
+        _state = MementerState.PLAYING;
+
+        _initialPosition = gameObject.transform.position;
+    }
+
+    public void EnableInputs()
+    {
+        _allowInputs = true;
+    }
+
+    public void DisableInputs()
+    {
+        _allowInputs = false;
     }
 
     // Update is called once per frame
     void Update()
     {
-        _horizontalInput = Input.GetAxisRaw("Horizontal");
-
-        _animator.SetFloat("HorizontalMove", _horizontalInput);
-
-        if(_groundCheck.IsGrounded && Input.GetButtonDown("Jump"))
+        if(_allowInputs)
         {
-            _jumpInput = true;
-            _animator.SetTrigger("Jumping");
+            _horizontalInput = Input.GetAxisRaw("Horizontal");
+
+            _animator.SetFloat("HorizontalMove", _horizontalInput);
+            _animator.SetBool("IsGrounded", _groundCheck.IsGrounded);
+
+            if(_groundCheck.IsGrounded && Input.GetButtonDown("Jump"))
+            {
+                _jumpInput = true;
+                _animator.SetTrigger("Jump");
+            }
+        }
+        else
+        {
+            _horizontalInput = 0f;
+            if(_state == MementerState.FINISHED)
+            {
+                _animator.SetTrigger("Finish");
+                _state = MementerState.FINISHED;
+            }
         }
 
+    }
+
+    public void Reset()
+    {
+        //Initial position
+        gameObject.transform.position = _initialPosition;
+
+        //New state playing
+        _state = MementerState.PLAYING;
     }
 
     void FixedUpdate()

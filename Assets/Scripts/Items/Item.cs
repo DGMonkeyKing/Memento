@@ -9,6 +9,9 @@ namespace DGMKCollections.Memento.Items
     [RequireComponent(typeof(Collider2D))]
     public class Item : MonoBehaviour
     {
+        public delegate void ItemActions(Item item);
+        public event ItemActions ItemPicked;
+
         [SerializeField]
         private ItemData[] _itemData;
 
@@ -18,6 +21,7 @@ namespace DGMKCollections.Memento.Items
             foreach(ItemData i in _itemData)
             {
                 i.MakeAction(this, collector);
+                ItemPicked?.Invoke(this);
             }
         }
     }

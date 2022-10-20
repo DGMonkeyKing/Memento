@@ -1,5 +1,11 @@
 {
   "dependencies": {
+    "com.dgmkpixy.designpatterns": {
+      "version": "file:Memento",
+      "depth": 0,
+      "source": "embedded",
+      "dependencies": {}
+    },
     "com.unity.2d.animation": {
       "version": "7.0.6",
       "depth": 1,

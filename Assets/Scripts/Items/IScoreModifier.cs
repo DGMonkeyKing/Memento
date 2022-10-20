@@ -6,7 +6,7 @@ namespace DGMKCollections.Score.Interfaces
 {
     public interface IScoreModifier
     {
-        delegate void ScoreModifier(int score);
+        delegate void ScoreModifier(int score = 0);
         static event ScoreModifier AddScore;
     }
 }
