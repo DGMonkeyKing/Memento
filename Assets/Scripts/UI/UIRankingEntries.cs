@@ -18,12 +18,12 @@ public class UIRankingEntries : MonoBehaviour
         _position.text  = position.ToString();
     }
 
-    public void ChangeInfo(Entry _entry)
+    public void ChangeInfo(string name, float score)
     {
-        _name.text = _entry.EntryName;
-        if(_entry.EntryScore == float.MaxValue)
+        _name.text = name;
+        if(score == float.MaxValue)
             _score.text = "99:99.999";
         else
-            _score.text = Timer.MillisecondsToStringFormatted(_entry.EntryScore, @"mm\:ss\.fff");
+            _score.text = Timer.MillisecondsToStringFormatted(score, @"mm\:ss\.fff");
     }
 }

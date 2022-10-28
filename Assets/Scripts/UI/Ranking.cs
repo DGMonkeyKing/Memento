@@ -1,77 +1,128 @@
 using System;
 using System.Collections.Generic;
+using UnityEngine;
 
-public class Ranking
+namespace DGMKCollections.Rankings
 {
-    List<Entry> _entries;
-
-    public Ranking(int _numberOfEntries)
+    public class Ranking
     {
-        _entries = new List<Entry>();
+        List<RankingEntry> _entries;
+        public List<RankingEntry> Entries => _entries;
 
-        for(int i = 0; i < _numberOfEntries; i++)
+        public Ranking(int _numberOfEntries)
         {
-            _entries.Add(new Entry());
-        }
-    }
+            _entries = new List<RankingEntry>();
 
-    public int CheckPosition(float milliseconds)
-    {
-        int position = -1;
-
-        for(int i = _entries.Count-1; i >= 0; i--)
-        {
-            Entry e = _entries[i];
-
-            if(e.EntryScore < milliseconds)
+            for(int i = 0; i < _numberOfEntries; i++)
             {
-                // Hemos encontrado posición
+                _entries.Add(new RankingEntry());
+            }
+        }
+
+#region PUBLIC_API
+        public void PutNewEntryInRanking(string name, float score)
+        {
+            RankingEntry re = new RankingEntry(name, score);
+
+            int position = CheckPositionInRanking(score);
+            if(position >= 0) // Hemos encontrado una posicion
+            {
+                PutNewEntryInPosition(re, position);
+
+                SaveStateOfRankingInFile();
+            }
+        }
+
+        private void SaveStateOfRankingInFile()
+        {
+            SaveManager.Save(this);
+        }
+
+        public string GetPositionName(int position)
+        {
+            return _entries[position].EntryName;
+        }
+
+        public float GetPositionScore(int position)
+        {
+            return _entries[position].EntryScore;
+        }
+
+        // TODO: Reimplement using Divide y Vencerás.
+        public int CheckPositionInRanking(float score)
+        {
+            int position = -1;
+
+            if(_entries[_entries.Count - 1].EntryScore < score)
                 return position;
+
+            for(position = _entries.Count - 1; position > 0; position--)
+            {
+                RankingEntry e = _entries[position-1];
+
+                if(e.EntryScore < score)
+                {
+                    // Hemos encontrado posición
+                    return position;
+                }
             }
 
-            position = i;
+            return position;
+        }
+#endregion
+
+#region PRIVATE_METHODS
+        private void PutNewEntryInPosition(RankingEntry re, int position)
+        {
+            _entries.Insert(position, re);
+        }
+#endregion
+    }
+
+    public class RankingEntry
+    {
+        public string EntryName;
+        public float EntryScore;
+
+        public RankingEntry()
+        {
+            EntryName = "---";
+            EntryScore = float.MaxValue;
         }
 
-        return position;
+        public RankingEntry(string name, float score)
+        {
+            EntryName = name;
+            EntryScore = score;
+        }
+
+        // -1 : Entry is Lower
+        // 0 : Entry is Equal
+        // 1 : Entry is Bigger
+        public int CompareToScore(float score)
+        {
+            int result = (int)(EntryScore - score);
+
+            if(result != 0) result /= Math.Abs(result);
+
+            return result;
+        }
+
     }
 
-    public Entry GetEntry(int position)
+    [Serializable]
+    public class RankingData
     {
-        return _entries[position];
+        public string[] name = new string[6];
+        public float[] score = new float[6];
+
+        public RankingData(Ranking ranking)
+        {
+            for(int i = 0; i < 6; i++)
+            {
+                name[i] = ranking.Entries[i].EntryName;
+                score[i] = ranking.Entries[i].EntryScore;
+            }
+        }
     }
-
-    public void SetEntry(string name, float milliseconds)
-    {
-        Entry e = new Entry();
-        e.EntryName = name;
-        e.EntryScore = milliseconds;
-
-        _entries[CheckPosition(milliseconds)].EntryName = name;
-        _entries[CheckPosition(milliseconds)].EntryScore = milliseconds;
-    }
-}
-
-public class Entry
-{
-    public string EntryName;
-    public float EntryScore;
-
-    public Entry()
-    {
-        EntryName = "---";
-        EntryScore = float.MaxValue;
-    }
-
-    // -1 : Entry is Lower
-    // 0 : Entry is Equal
-    // 1 : Entry is Bigger
-    public int CompareToScore(float score)
-    {
-        int result = (int)(EntryScore - score);
-
-        if(result != 0) result /= Math.Abs(result);
-
-        return result;
-    }
-
 }

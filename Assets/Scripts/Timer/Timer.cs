@@ -42,7 +42,7 @@ namespace DGMKCollections.Timer
             {
                 _timerOn = true;
                 _millisecondsCount = _startingMilliseconds;
-                Coroutine _timerCoroutine = StartCoroutine(RunTimer());
+                _timerCoroutine = StartCoroutine(RunTimer());
 
                 OnStartTimer?.Invoke();
             }

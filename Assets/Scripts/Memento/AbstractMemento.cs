@@ -2,14 +2,12 @@ using System;
 
 namespace DGMKCollections.Patterns.Memento
 {
-    public abstract class ConcreteMemento : IMemento
+    public abstract class AbstractMemento : IMemento
     {
-        private string _name = "default";
         private DateTime _date;
 
-        public ConcreteMemento(string name)
+        public AbstractMemento()
         {
-            _name = name;
             _date = DateTime.Now;
         }
 
@@ -18,9 +16,9 @@ namespace DGMKCollections.Patterns.Memento
             return _date;
         }
 
-        public string GetName()
+        public virtual string GetName()
         {
-            return $"{_date}/{_name}";
+            return $"{_date}";
         }
     }
 }

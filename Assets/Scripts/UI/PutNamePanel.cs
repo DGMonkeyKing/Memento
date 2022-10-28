@@ -14,7 +14,7 @@ namespace DGMKCollections.Memento.UI
 
         void OnEnable()
         {
-
+            _inputName.Reset();
         }
 
         void OnDisable()

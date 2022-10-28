@@ -20,6 +20,7 @@ namespace DGMKCollections.Memento.Components
 
         public void Jump()
         {
+            _rigidbody.velocity = Vector2.zero;
             _rigidbody.AddForce(Vector3.up * _force);
         }
     }
