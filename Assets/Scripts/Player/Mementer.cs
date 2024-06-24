@@ -23,6 +23,7 @@ public class Mementer : MonoBehaviour
     private Animator _animator;
     private Rigidbody2D _rigidbody;
     private float _originalGravityScale;
+    private SpriteRenderer _spriteRenderer;
 
     private bool _allowInputs;
     private Vector3 _initialPosition = Vector3.zero;
@@ -31,6 +32,7 @@ public class Mementer : MonoBehaviour
     // Start is called before the first frame update
     void Start()
     {
+        _spriteRenderer = GetComponent<SpriteRenderer>();
         _animator = GetComponent<Animator>();
         _horizontalMoveComponent = GetComponent<Horizontal2DMove>();
         _groundCheck = GetComponent<GroundChecker2D>();
@@ -63,14 +65,18 @@ public class Mementer : MonoBehaviour
         {
             _horizontalInput = Input.GetAxisRaw("Horizontal");
 
-            _animator.SetFloat("HorizontalMove", _horizontalInput);
+            _animator.SetFloat("HorizontalMove", Mathf.Abs(_horizontalInput));
             _animator.SetBool("IsGrounded", _groundCheck.IsGrounded);
 
-            if(_groundCheck.IsGrounded && Input.GetButtonDown("Jump"))
+            if(_horizontalInput != 0)
+                _spriteRenderer.flipX = _horizontalInput < 0; // Flip the sprite
+
+            if (_groundCheck.IsGrounded && Input.GetButtonDown("Jump"))
             {
                 _jumpInput = true;
-                _animator.SetTrigger("Jump");
+                _animator.SetBool("Jumping", _jumpInput);
             }
+
         }
         else
         {

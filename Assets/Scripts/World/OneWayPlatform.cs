@@ -2,17 +2,16 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-[RequireComponent(typeof(BoxCollider2D))]
 [RequireComponent(typeof(PlatformEffector2D))]
 public class OneWayPlatform : MonoBehaviour
 {
     private float _verticalInput = 0f;
-    private BoxCollider2D _collider;
+    private Collider2D _collider;
 
     // Start is called before the first frame update
     void Start()
     {
-        _collider = GetComponent<BoxCollider2D>();   
+        _collider = GetComponent<Collider2D>();   
     }
 
     // Update is called once per frame
